@@ -2,9 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Polysphere puzzle</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div class="container">
+
+    <div class="pieces-holder">
+        <!-- Pieces will be added here -->
+    </div>
+
+    <div id="board">
+
+    </div>
+
+    <div class="solution-changer">
+        <button id="prev">
+            <img src="svg/next.svg" height="25px" id="prev-img"></img></button>
+        <span id="solution">1</span>
+        <button id="next">
+            <img src="svg/next.svg" height="25px" id="next-img"></img>
+        </button>
+    </div>
+
+    <div class="controls">
+        <button id="reset">Reset</button>
+        <button id="solve">Solve</button>
+    </div>
+
+    <script>
+        // loads pieces
+        let piecesHolder = document.querySelector('.pieces-holder');
+
+        for (let i = 0; i < 12; i++) {
+            let piece = document.createElement('div');
+            piece.classList.add('piece');
+            piece.style.width = '100px';
+            piece.style.height = '100px';
+            piece.datashape = i+1;
+            piece.draggable = true;
+
+            let img = document.createElement('img');
+            img.src = `svg/${i+1}.svg`;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.pointerEvents = 'none';   
+            piece.appendChild(img);
+
+            piecesHolder.appendChild(piece);
+        }
+    </script>
+
+    <script>
+        //sets the board
+        let board = document.getElementById('board');
+        for (let i = 0; i < 55; i++) {
+            let cell = document.createElement('div');
+            cell.classList.add('cell');
+            board.appendChild(cell);
+        }
+    </script>
+
+    <script src="script.js"></script>
+
+</div>
 
 </body>
 </html>
