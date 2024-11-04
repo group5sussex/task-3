@@ -23,6 +23,11 @@ body {
   max-width: 600px;
 }
 
+.piece{
+  margin: 5px;
+  cursor: grab;
+}
+
 #board {
   display: grid;
   grid-template-columns: repeat(11, 40px); /* Доска 11 колонок */

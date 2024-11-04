@@ -9,6 +9,11 @@
 
 <div class="container">
 
+    <h1>Polysphere puzzle</h1>
+
+    <p>Drag and drop the pieces to the board to solve the puzzle.</p>
+    <p>Alt - flip and Shift - rotation, just put mouse on or drag it</p>
+
     <div class="pieces-holder">
         <!-- Pieces will be added here -->
     </div>
@@ -41,7 +46,12 @@
             piece.classList.add('piece');
             piece.style.width = '100px';
             piece.style.height = '100px';
-            piece.datashape = i+1;
+            piece.style.transform = 'rotate(0deg)';
+            piece.dataset.shape = i+1;
+            piece.dataset.rotation = 0;
+            piece.dataset.mirrored = 0;
+            piece.id = "piece" + (i+1);
+
             piece.draggable = true;
 
             let img = document.createElement('img');
@@ -61,9 +71,13 @@
         for (let i = 0; i < 55; i++) {
             let cell = document.createElement('div');
             cell.classList.add('cell');
+            cell.id = i;
             board.appendChild(cell);
         }
     </script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script src="script.js"></script>
 
