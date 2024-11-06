@@ -101,85 +101,81 @@ def is_valid_position(board, piece, row_i, column_j):
 
     # 5_row 11_column
 
+if __name__ == "__main__":
+    # board
+    width = 11
+    height = 5
+    count_squares = width*height
+    number_of_pieces = 12
 
-# board
-width = 11
-height = 5
-count_squares = width*height
-number_of_pieces = 12
+    width_incidence_row = count_squares + number_of_pieces
 
-width_incidence_row = count_squares + number_of_pieces
+    board = [[0 for col in range(width)] for row in range(height)]
 
-board = [[0 for col in range(width)] for row in range(height)]
+    # pieces
+    # we chose heighst poinst of a piece as anchor point and create offsets from that point
 
-# pieces
-# we chose heighst poinst of a piece as anchor point and create offsets from that point
-
-piece_a = [(0, 0), (1, 0), (0, 1), (0, 2), (1, 2)]
-piece_b = [(0, 0), (0, 1), (1, 0), (1, -1), (1, -2)]
-piece_c = [(0, 0), (1, 0), (1, -1), (2, 0), (2, 1)]
-piece_d = [(0, 0), (1, 0), (1, 1), (1, -1)]
-piece_e = [(0, 0), (1, 0), (1, 1), (1, -1), (1, 2)]
-piece_f = [(0, 0), (0, 1), (1, 0), (1, 1), (1, -1)]
-piece_g = [(0, 0), (0, 1), (1, 0), (1, -1)]
-piece_h = [(0, 0), (0, 1), (1, 0), (2, 0)]
-piece_i = [(0, 0), (0, 1), (0, 2), (2, 1), (2, 2)]
-piece_j = [(0, 0), (0, 1), (1, 1), (1, 2), (1, 3)]
-piece_k = [(0, 0), (1, 0), (1, 1)]
-piece_l = [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2)]
-
-
-# index_last_cell
-# pieces = {count_squares: piece_a,
-#        count_squares+1: piece_b,
-#         count_squares+2: piece_c}
-
-pieces = {count_squares: piece_a,
-          count_squares+1: piece_b,
-          count_squares+2: piece_c,
-          count_squares+3: piece_d,
-          count_squares+4: piece_e,
-          count_squares+5: piece_f,
-          count_squares+6: piece_g,
-          count_squares+7: piece_h,
-          count_squares+8: piece_i,
-          count_squares+9: piece_j,
-          count_squares+10: piece_k,
-          count_squares+11: piece_l,
+    piece_a = [(0, 0), (1, 0), (0, 1), (0, 2), (1, 2)]
+    piece_b = [(0, 0), (0, 1), (1, 0), (1, -1), (1, -2)]
+    piece_c = [(0, 0), (1, 0), (1, -1), (2, 0), (2, 1)]
+    piece_d = [(0, 0), (1, 0), (1, 1), (1, -1)]
+    piece_e = [(0, 0), (1, 0), (1, 1), (1, -1), (1, 2)]
+    piece_f = [(0, 0), (0, 1), (1, 0), (1, 1), (1, -1)]
+    piece_g = [(0, 0), (0, 1), (1, 0), (1, -1)]
+    piece_h = [(0, 0), (0, 1), (1, 0), (2, 0)]
+    piece_i = [(0, 0), (0, 1), (0, 2), (2, 1), (2, 2)]
+    piece_j = [(0, 0), (0, 1), (1, 1), (1, 2), (1, 3)]
+    piece_k = [(0, 0), (1, 0), (1, 1)]
+    piece_l = [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2)]
 
 
+    # index_last_cell
+    # pieces = {count_squares: piece_a,
+    #        count_squares+1: piece_b,
+    #         count_squares+2: piece_c}
+
+    pieces = {
+        count_squares: piece_a,
+        count_squares+1: piece_b,
+        count_squares+2: piece_c,
+        count_squares+3: piece_d,
+        count_squares+4: piece_e,
+        count_squares+5: piece_f,
+        count_squares+6: piece_g,
+        count_squares+7: piece_h,
+        count_squares+8: piece_i,
+        count_squares+9: piece_j,
+        count_squares+10: piece_k,
+        count_squares+11: piece_l,
+    }
+
+    # print(pieces)
+
+    # for square_height_offset, square_width_offset in piece_a:
+    #     print(square_height_offset)
+    # row_incidence = [0 for i in range(10)]
+    # print(row_incidence)
 
 
+    # positions = find_all_positions(board, piece_a)
+    # msg = f'row: {row_i} column: {column_j} '
+    # positions.append((row_i, column_j))
 
-          }
+    incidence = create_incidence_matrix(pieces)
 
-# print(pieces)
+    print("total number of posisitions: ", len(incidence))
 
-# for square_height_offset, square_width_offset in piece_a:
-#     print(square_height_offset)
-# row_incidence = [0 for i in range(10)]
-# print(row_incidence)
-
-
-# positions = find_all_positions(board, piece_a)
-# msg = f'row: {row_i} column: {column_j} '
-# positions.append((row_i, column_j))
-
-incidence = create_incidence_matrix(pieces)
-
-print("total number of posisitions: ", len(incidence))
-
-#print("incidence matrix:")
-# print(incidence)
+    #print("incidence matrix:")
+    # print(incidence)
 
 
-sol = covers_bool(incidence)
-total_solusions = len(list(sol))
+    sol = covers_bool(incidence)
+    total_solusions = len(list(sol))
 
-print("total number of solusion: ", total_solusions)
+    print("total number of solusion: ", total_solusions)
 
-# print("all solusions:", ec.get_exact_cover(incidence))
+    # print("all solusions:", ec.get_exact_cover(incidence))
 
 
-# print(positions[0:2])
-# create_incidence_matrix(positions[0:10])
+    # print(positions[0:2])
+    # create_incidence_matrix(positions[0:10])
