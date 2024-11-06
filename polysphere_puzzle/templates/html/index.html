@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Polysphere puzzle</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
@@ -24,11 +25,11 @@
 
     <div class="solution-changer">
         <button id="prev">
-            <img src="svg/next.svg" height="25px" id="prev-img" alt="next"></img>
+            <img src="{% static 'svg/next.svg' %}" height="25px" id="prev-img" alt="next"></img>
         </button>
         <span id="solution">1</span>
         <button id="next">
-            <img src="svg/next.svg" height="25px" id="next-img" alt="next"></img>
+            <img src="{% static 'svg/next.svg' %}" height="25px" id="next-img" alt="next"></img>
         </button>
     </div>
 
@@ -55,10 +56,10 @@
             piece.draggable = true;
 
             let img = document.createElement('img');
-            img.src = `svg/${i+1}.svg`;
+            img.src = `{% static 'svg/' %}${i+1}.svg`;
             img.style.width = '100%';
             img.style.height = '100%';
-            img.style.pointerEvents = 'none';   
+            img.style.pointerEvents = 'none';
             piece.appendChild(img);
 
             piecesHolder.appendChild(piece);
@@ -76,10 +77,7 @@
         }
     </script>
 
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-    <script src="script.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 
 </div>
 
