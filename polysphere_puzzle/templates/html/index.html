@@ -38,6 +38,35 @@
         <button id="solve">Solve</button>
     </div>
 
+    <pre id="sse-data"></pre>
+
+    <script>
+    function startSSE() {
+        const puzzlePositions = JSON.stringify(getPuzzlePositions());
+        const eventSource = new EventSource(`/events/?positions=${encodeURIComponent(puzzlePositions)}`);
+
+        eventSource.onmessage = function(event) {
+            const solution = JSON.parse(event.data);
+            document.getElementById("sse-data").innerText += solution + "\n";
+        };
+
+        eventSource.onerror = function(event) {
+            console.error("EventSource failed:", event);
+        };
+    }
+
+    function getPuzzlePositions() {
+        // Collect puzzle positions from the board
+        // This is a placeholder function, implement as needed
+        return [
+            { piece: 1, position: [0, 0] },
+            { piece: 2, position: [1, 1] }
+        ];
+    }
+
+    document.getElementById("solve").addEventListener("click", startSSE);
+</script>
+
     <script>
         // loads pieces
         let piecesHolder = document.querySelector('.pieces-holder');

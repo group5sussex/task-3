@@ -21,8 +21,7 @@ def create_incidence_matrix(pieces):
                 row_incidence[index] = 1
 
             row_incidence[piece_id] = 1
-            incidence_matrix = np.append(
-                incidence_matrix, [row_incidence], axis=0)
+            incidence_matrix = np.append(incidence_matrix, [row_incidence], axis=0)
     np.set_printoptions(threshold=np.inf)
 
     # print(incidence_matrix)
