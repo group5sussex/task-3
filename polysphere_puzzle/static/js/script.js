@@ -37,14 +37,10 @@ let dragCounter = 0;
 
 document.querySelectorAll('.piece').forEach(piece => {
     piece.addEventListener('dragstart', dragStart);
-    piece.addEventListener('wheel', rotatePiece);
     piece.addEventListener('drag', drag);
-    piece.addEventListener('mouseenter', (e) => {
-        selectedPiece = e.target;
-    });
-    piece.addEventListener('mouseleave', (e) => {
-        selectedPiece = null;
-    });
+    piece.addEventListener('dragend', ()=> {
+        dragData = null; dragCounter = 0; selectedPiece = null;
+    })
 });
 
 function rotatePieceDuringDrag(e, selectedPiece) {
@@ -92,20 +88,6 @@ function mirrorPieceDuringDrag(e, selectedPiece) {
     piece.setAttribute('data-mirrored', mirrored);
     dragData.mirrored = mirrored;
 }
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Alt' && selectedPiece) {
-        e.preventDefault()
-        mirrorPiece({ target: selectedPiece, preventDefault: () => {} });
-    }
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Shift' && selectedPiece) {
-        e.preventDefault()
-        rotatePiece({ target: selectedPiece, preventDefault: () => {}, deltaY: 1 });
-    }
-});
 
 document.querySelectorAll('.cell').forEach(cell => {
     cell.setAttribute('draggable', 'true');
