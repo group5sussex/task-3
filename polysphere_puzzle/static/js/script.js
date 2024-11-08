@@ -292,6 +292,14 @@ function resetBoard() {
         piece.style.backgroundColor = 'transparent';
     });
 
+    solutions = [];
+
+    document.getElementsByClassName("solution-changer")[0].style.transform = "scaleX(0)";
+
+    current_solution = 1;
+
+    close_connection();
+
     drawBoard(vBoard);
 }
 
@@ -343,6 +351,11 @@ let colors = {
 function drawBoard(vBoard) {
     let tempBoard = JSON.parse(JSON.stringify(vBoard));
 
+    for (let i = 0; i < 12; i++) {
+        document.getElementById(`piece${i+1}`).style.backgroundColor = 'transparent';
+        pieceUsed[i] = false;
+    }
+
     for (let i = 0; i < tempBoard.length; i++) {
         for (let j = 0; j < tempBoard[i].length; j++) {
             const cell = document.getElementById(`${j + i * 11}`);
@@ -353,6 +366,8 @@ function drawBoard(vBoard) {
             }
             cell.style.backgroundColor = colors[tempBoard[i][j]];
             cell.dataset.filler = tempBoard[i][j];
+            pieceUsed[tempBoard[i][j] - 1] = true;
+            document.getElementById(`piece${tempBoard[i][j]}`).style.backgroundColor = 'black';
         }
     }
 }
