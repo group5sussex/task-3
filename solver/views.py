@@ -4,6 +4,7 @@ from django.http import JsonResponse
 import numpy as np
 from xcover import covers_bool
 import xcover
+import matplotlib.pyplot as plt
 
 
 def index(request):
@@ -262,8 +263,10 @@ i = count_squares
 j = count_squares+number_of_pieces
 solusion_board = [[0 for col in range(width)] for row in range(height)]
 
+# solusion=[2804, 906, 389, 2090, 1284, 1785, 979, 543, 65, 2572, 2173, 1535]
 
-def print_solusion(solusion=[2804, 906, 389, 2090, 1284, 1785, 979, 543, 65, 2572, 2173, 1535]):
+
+def get_solusion_board(solusion):
 
     for item in solusion:
         piece_id = np.where(incidence_matrix[item][i: j] == 1)[0]
@@ -279,31 +282,13 @@ def print_solusion(solusion=[2804, 906, 389, 2090, 1284, 1785, 979, 543, 65, 257
 
     print(np.matrix(solusion_board))
 
+    return solusion_board
 
-# positions = []
 
-# for row_i in range(height):
-#     for column_j in range(width):
-#         if is_valid_position(board, piece_i, row_i, column_j):
-#             positions.append([(row_i+piece_row_i, column_j+piece_col_j)
-#                               for piece_row_i, piece_col_j in piece_i])
-
-# print(positions)
-# exit()
-
-counter = 1
 for solution in covers_bool(incidence_matrix):
-    if counter < 5:
-        counter += 1
-        # print()
+    print(get_solusion_board(solution))
 
-        for item in solution:
-            row_incidence = np.where(incidence_matrix[item][63] == 1)[0]
-            print(row_incidence)
-
-        print(incidence_matrix[1985])
-
-        print("solusion :", solution)
-        print_solusion(solution)
-        print("------------")
-        exit
+    # plt.imshow(get_solusion_board(solution), cmap='Spectral',
+    #            interpolation='nearest')
+    # plt.colorbar()
+    # plt.show()
