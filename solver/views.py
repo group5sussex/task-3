@@ -229,7 +229,7 @@ piece_e = [(0, 0), (1, 0), (1, 1), (1, -1), (1, 2)]
 piece_f = [(0, 0), (0, 1), (1, 0), (1, 1), (1, -1)]
 piece_g = [(0, 0), (0, 1), (1, 0), (1, -1)]
 piece_h = [(0, 0), (0, 1), (1, 0), (2, 0)]
-piece_i = [(0, 0), (0, 1), (0, 2), (2, 1), (2, 2)]
+piece_i = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2)]
 piece_j = [(0, 0), (1, 0), (1, 1), (1, 2), (1, 3)]
 piece_k = [(0, 0), (1, 0), (1, 1)]
 piece_l = [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2)]
@@ -280,16 +280,16 @@ def print_solusion(solusion=[2804, 906, 389, 2090, 1284, 1785, 979, 543, 65, 257
     print(np.matrix(solusion_board))
 
 
-positions = []
+# positions = []
 
 # for row_i in range(height):
-#             for column_j in range(width):
-#                 if is_valid_position(board, piece_id, row_i, column_j):
-#                     positions.append([(row_i+piece_row_i, column_j+piece_col_j)
-#                                       for piece_row_i, piece_col_j in rotated_piece])
+#     for column_j in range(width):
+#         if is_valid_position(board, piece_i, row_i, column_j):
+#             positions.append([(row_i+piece_row_i, column_j+piece_col_j)
+#                               for piece_row_i, piece_col_j in piece_i])
 
-
-exit()
+# print(positions)
+# exit()
 
 counter = 1
 for solution in covers_bool(incidence_matrix):
