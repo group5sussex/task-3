@@ -1,46 +1,74 @@
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.http import StreamingHttpResponse
 
 import numpy as np
 from xcover import covers_bool
 import xcover
 import matplotlib.pyplot as plt
+import time
+import json
+
+# return sample json file
 
 
 def index(request):
-    return HttpResponse("hello")
+
+    data = [[65, 65, 62, 62, 62, 59, 59, 59, 59, 57, 56], [65, 60, 62, 66, 66, 61, 59, 57, 57, 57, 56], [60, 60, 66, 66, 58, 61,
+                                                                                                         61, 63, 57, 56, 56], [60, 60, 66, 64, 58, 58, 61, 63, 55, 56, 55], [64, 64, 64, 64, 58, 63, 63, 63, 55, 55, 55]]
+
+    response = HttpResponse(json.dumps(data), content_type="application/json")
+    return response
 
 
+# def submit(request):
+
+#     if request.method == 'POST':
+#         # Extract data from the POST request
+#         # 'data_key' is the name attribute in your HTML form
+#         data = request.POST.get('data_key', '')
+
+#         # Process the data as needed
+#         response_data = {
+#             'message': 'Data received successfully',
+#             'data': data,
+#         }
+
+#         # Return a JSON response
+#         return JsonResponse({'response': 'back'}, safe=False, status=405)
+#     else:
+#         return JsonResponse({'error': 'Invalid request method'}, safe=False, status=405)
+
+
+# input json
+# {
+#   "initial_state": [
+#     { "65": [[0, 0], [1, 0], [0, 1]] },
+#     { "64": [[4, 0], [4, 1], [4, 2], [4, 3], [3, 3]] }
+#   ]
+# }
 def submit(request):
+    data = json.loads(request.body.decode('utf-8'))
+    initial_state = data.get('initial_state', [])
 
-    if request.method == 'POST':
-        # Extract data from the POST request
-        # 'data_key' is the name attribute in your HTML form
-        data = request.POST.get('data_key', '')
+    for state in data['initial_state']:
+        for key, value in state.items():
+            state[key] = [tuple(item) for item in value]
 
-        # Process the data as needed
-        response_data = {
-            'message': 'Data received successfully',
-            'data': data,
-        }
+    incidence_matrix = create_incidence_matrix(
+        pieces, initial_state=initial_state)
 
-        # Return a JSON response
-        return JsonResponse(request.body)
-    else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    def stream_content():
 
+        for solution in covers_bool(incidence_matrix):
+            result = get_solusion_board(solution, incidence_matrix)
+            yield f"data: {json.dumps(result.tolist())}\n\n"
 
-def create_incidence_from_initial_state(pieces, initial_state=[]):
-    pass
-
-    # for item in initial_state:
-    #     key = list(item.keys())[0]
-    #     key = int(key)
-    #     del pieces[key]
-
-    # print(pieces)
-
-    return create_incidence_matrix(pieces)
+    # Create the StreamingHttpResponse
+    response = StreamingHttpResponse(
+        stream_content(), content_type="text/event-stream")
+    response['Content-Disposition'] = 'inline; filename="stream.txt"'
+    return response
 
 
 def create_incidence_matrix(pieces, initial_state):
@@ -254,8 +282,8 @@ pieces = {count_squares: piece_a,
 
 initial_state = []
 
-incidence_matrix = create_incidence_matrix(
-    pieces=pieces, initial_state=initial_state)
+# incidence_matrix = create_incidence_matrix(
+#    pieces=pieces, initial_state=initial_state)
 
 # print(incidence_matrix[-1])
 # covers_bool(incidence_matrix)
@@ -266,7 +294,7 @@ solusion_board = [[0 for col in range(width)] for row in range(height)]
 # solusion=[2804, 906, 389, 2090, 1284, 1785, 979, 543, 65, 2572, 2173, 1535]
 
 
-def get_solusion_board(solusion):
+def get_solusion_board(solusion, incidence_matrix):
 
     for item in solusion:
         piece_id = np.where(incidence_matrix[item][i: j] == 1)[0]
@@ -280,15 +308,86 @@ def get_solusion_board(solusion):
                 # print(f"col,row : {column_j}, {+row_i}")
                 solusion_board[row_i][column_j] = piece_id
 
-    print(np.matrix(solusion_board))
+    solusion = np.matrix(solusion_board)
+    print(solusion)
+    return np.matrix(solusion)
 
-    return solusion_board
+
+# initial_state = [
+#     {65: [(0, 0), (1, 0), (0, 1)]},
+#     {64: [(4, 0), (4, 1), (4, 2), (4, 3), (3, 3)]},
+# ]
+
+# incidence_matrix = create_incidence_matrix(
+#     pieces, initial_state=initial_state)
+
+# for solution in covers_bool(incidence_matrix):
+#     print(get_solusion_board(solution))
+
+#     plt.imshow(get_solusion_board(solution), cmap='Spectral',
+#                interpolation='nearest')
+#     plt.colorbar()
+#     plt.show()
+
+'''
 
 
-#for solution in covers_bool(incidence_matrix):
- #   print(get_solusion_board(solution))
+incidence_matrix = create_incidence_matrix(
+    pieces, initial_state=initial_state)
 
-    # plt.imshow(get_solusion_board(solution), cmap='Spectral',
-    #            interpolation='nearest')
-    # plt.colorbar()
-    # plt.show()
+for solution in covers_bool(incidence_matrix):
+    print(get_solusion_board(solution))
+
+    plt.imshow(get_solusion_board(solution), cmap='Spectral',
+               interpolation='nearest')
+    plt.colorbar()
+    plt.show()
+'''
+width = 11
+
+height = 5
+count_squares = width*height
+number_of_pieces = 12
+
+width_incidence_row = count_squares + number_of_pieces
+
+board = [[0 for col in range(width)] for row in range(height)]
+
+piece_a = [(0, 0), (1, 0), (0, 1), (0, 2), (1, 2)]
+piece_b = [(0, 0), (0, 1), (1, 0), (1, -1), (1, -2)]
+piece_c = [(0, 0), (1, 0), (1, -1), (2, 0), (2, 1)]
+piece_d = [(0, 0), (1, 0), (1, 1), (1, -1)]
+piece_e = [(0, 0), (1, 0), (1, 1), (1, -1), (1, 2)]
+piece_f = [(0, 0), (0, 1), (1, 0), (1, 1), (1, -1)]
+piece_g = [(0, 0), (0, 1), (1, 0), (1, -1)]
+piece_h = [(0, 0), (0, 1), (1, 0), (2, 0)]
+piece_i = [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2)]
+piece_j = [(0, 0), (1, 0), (1, 1), (1, 2), (1, 3)]
+piece_k = [(0, 0), (1, 0), (1, 1)]
+piece_l = [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2)]
+
+pieces = {count_squares: piece_a,
+          count_squares+1: piece_b,
+          count_squares+2: piece_c,
+          count_squares+3: piece_d,
+          count_squares+4: piece_e,
+          count_squares+5: piece_f,
+          count_squares+6: piece_g,
+          count_squares+7: piece_h,
+          count_squares+8: piece_i,
+          count_squares+9: piece_j,
+          count_squares+10: piece_k,
+          count_squares+11: piece_l,
+
+          }
+
+initial_state = []
+
+incidence_matrix = create_incidence_matrix(
+    pieces=pieces, initial_state=initial_state)
+
+# print(incidence_matrix[-1])
+# covers_bool(incidence_matrix)
+i = count_squares
+j = count_squares+number_of_pieces
+solusion_board = [[0 for col in range(width)] for row in range(height)]

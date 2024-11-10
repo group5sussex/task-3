@@ -23,8 +23,8 @@ def deploy():
     _update_static_files(source_folder)
     _update_database(source_folder)
     _run_server(source_folder)
-   # _reload_celery_service()
-    #_reload_gunicorn_service()
+    # _reload_celery_service()
+    # _reload_gunicorn_service()
 
 
 def _init_env():
@@ -82,8 +82,9 @@ def _update_database(source_folder):
         ' && ../venv/bin/python3 manage.py migrate --noinput'
     )
 
+
 def _run_server(source_folder):
-      run(
+    run(
         f'cd {source_folder}'
         ' && ../venv/bin/python3 manage.py runserver 0.0.0.0:8000'
     )
