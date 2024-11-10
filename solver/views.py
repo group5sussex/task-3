@@ -285,8 +285,8 @@ def get_solusion_board(solusion):
     return solusion_board
 
 
-for solution in covers_bool(incidence_matrix):
-    print(get_solusion_board(solution))
+#for solution in covers_bool(incidence_matrix):
+ #   print(get_solusion_board(solution))
 
     # plt.imshow(get_solusion_board(solution), cmap='Spectral',
     #            interpolation='nearest')
