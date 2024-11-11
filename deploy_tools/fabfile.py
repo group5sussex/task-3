@@ -16,6 +16,7 @@ def deploy():
 
     setting_path = "/home/erfan/Desktop/parsian/portal/portal/settings.py"
 
+    _run_tests()
     _create_directory_structure_if_necessary(site_folder)
     _get_latest_source(source_folder)
     _update_settings(source_folder, env.host)
@@ -31,6 +32,10 @@ def _init_env():
     env.host = 'staging.parsiancrm.ir'
     env.host_string = 'ubuntu@188.121.100.222'
     env.user = 'ubuntu'
+
+
+def _run_tests():
+    run(f'./manage.py test')
 
 
 def _create_directory_structure_if_necessary(site_folder):
