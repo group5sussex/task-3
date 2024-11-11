@@ -7,6 +7,7 @@ from xcover import covers_bool
 import matplotlib.pyplot as plt
 import time
 import json
+import copy
 
 # return sample json file
 
@@ -49,7 +50,13 @@ def submit(request):
 
     def stream_content():
 
+        counter = 0
+
         for solution in covers_bool(incidence_matrix):
+            counter += 1
+            if counter >= 1000:
+                break
+
             result = get_solution_board(solution, incidence_matrix)
             yield f"data: {json.dumps(result.tolist())}\n\n"
 
@@ -60,8 +67,11 @@ def submit(request):
     return response
 
 
-def create_incidence_matrix(pieces, initial_state):
+def create_incidence_matrix(pieces, initial_state=[]):
     incidence_matrix = np.empty((0, width_incidence_row))
+
+    temp_pieces = copy.deepcopy(pieces)
+    #temp_pieces = pieces
 
     for initial_pieces in initial_state:
         for key, positions in initial_pieces.items():
@@ -77,9 +87,9 @@ def create_incidence_matrix(pieces, initial_state):
             incidence_matrix = np.append(
                 incidence_matrix, [row_incidence], axis=0)
 
-            del pieces[piece_id]
+            del temp_pieces[piece_id]
 
-    for piece_id, piece in pieces.items():
+    for piece_id, piece in temp_pieces.items():
         positions = find_all_positions(board, piece)
 
         for position in positions:
@@ -216,6 +226,7 @@ pieces = {count_squares: piece_a,
           count_squares+9: piece_j,
           count_squares+10: piece_k,
           count_squares+11: piece_l,
+
           }
 
 
@@ -235,21 +246,18 @@ def get_solution_board(solution, incidence_matrix):
                 solution_board[row_i][column_j] = piece_id
 
     solution = np.matrix(solution_board)
-    print(solution)
+    # print(solution)
     return np.matrix(solution)
 
 
-'''
+# incidence_matrix = create_incidence_matrix(
+#     pieces, initial_state=[
+#         {65: [(0, 0), (1, 0), (0, 1)]},
+#         {64: [(4, 0), (4, 1), (4, 2), (4, 3), (3, 3)]},])
 
+# for solution in covers_bool(incidence_matrix):
 
-incidence_matrix = create_incidence_matrix(
-    pieces)
-
-for solution in covers_bool(incidence_matrix):
-    print(get_solution_board(solution))
-
-    plt.imshow(get_solution_board(solution), cmap='Spectral',
-               interpolation='nearest')
-    plt.colorbar()
-    plt.show()
-'''
+#     plt.imshow(get_solution_board(solution, incidence_matrix), cmap='Spectral',
+#                interpolation='nearest')
+#     plt.colorbar()
+#     plt.show()
