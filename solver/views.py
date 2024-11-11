@@ -1,14 +1,10 @@
 from django.http import HttpResponse
-from django.http import JsonResponse
 from django.http import StreamingHttpResponse
-
 import numpy as np
 from xcover import covers_bool
 import matplotlib.pyplot as plt
-import time
 import json
 import copy
-
 # return sample json file
 
 # sample response
@@ -60,7 +56,6 @@ def submit(request):
             result = get_solution_board(solution, incidence_matrix)
             yield f"data: {json.dumps(result.tolist())}\n\n"
 
-    # Create the StreamingHttpResponse
     response = StreamingHttpResponse(
         stream_content(), content_type="text/event-stream")
     response['Content-Disposition'] = 'inline; filename="stream.txt"'
@@ -71,7 +66,7 @@ def create_incidence_matrix(pieces, initial_state=[]):
     incidence_matrix = np.empty((0, width_incidence_row))
 
     temp_pieces = copy.deepcopy(pieces)
-    #temp_pieces = pieces
+    # temp_pieces = pieces
 
     for initial_pieces in initial_state:
         for key, positions in initial_pieces.items():
@@ -110,46 +105,54 @@ def create_incidence_matrix(pieces, initial_state=[]):
 def generate_mirrors(piece):
     mirrors = []
 
-    mirrors.append(piece)
+    mirror_horizontal = [(row_i, -col_j) for row_i, col_j in piece]
+    mirror_vertical = [(-row_i, col_j) for row_i, col_j in piece]
 
-    horizontal_mirror = [(-x, y) for x, y in piece]
-    mirrors.append(horizontal_mirror)
-
-    vertical_mirror = [(x, -y) for x, y in piece]
-    mirrors.append(vertical_mirror)
-
-    both_mirrors = [(-x, -y) for x, y in piece]
-    mirrors.append(both_mirrors)
+    mirrors.append(mirror_horizontal)
+    mirrors.append(mirror_vertical)
 
     return mirrors
 
+# use 3 90 degree rotation for each mirrors
 
-def rotate_piece(piece):
+
+def transform_piece(piece):
     transformations = []
 
     mirrors = generate_mirrors(piece)
 
     for mirror in mirrors:
-        current = mirror
-        for _ in range(4):
-            rotated = [(y, -x) for x, y in current]
+        rotate_90 = [(-row, col) for col, row in mirror]
+        rotate_90 = normalize(rotate_90)
+        if rotate_90 not in transformations:
+            transformations.append(rotate_90)
 
-            min_x = min(x for x, y in rotated)
-            min_y = min(y for x, y in rotated)
-            normalized = [(x - min_x, y - min_y) for x, y in rotated]
+        rotate_180 = [(-col, -row) for col, row in mirror]
+        rotate_180 = normalize(rotate_180)
+        if rotate_180 not in transformations:
+            transformations.append(rotate_180)
 
-            if normalized not in transformations:
-                transformations.append(normalized)
-
-            current = normalized
+        rotate_270 = [(row, -col) for col, row in mirror]
+        rotate_270 = normalize(rotate_270)
+        if rotate_270 not in transformations:
+            transformations.append(rotate_270)
 
     return transformations
+
+
+def normalize(transformation):
+    min_row = min(row for row, col in transformation)
+    min_col = min(col for row, col in transformation)
+    normalized = [(row - min_row, col - min_col)
+                  for row, col in transformation]
+
+    return normalized
 
 
 # returns array of tuples with position of each possible position of a piece
 def find_all_positions(board, piece):
     positions = []
-    rotations = rotate_piece(piece)
+    rotations = transform_piece(piece)
 
     for rotated_piece in rotations:
 
@@ -248,16 +251,3 @@ def get_solution_board(solution, incidence_matrix):
     solution = np.matrix(solution_board)
     # print(solution)
     return np.matrix(solution)
-
-
-# incidence_matrix = create_incidence_matrix(
-#     pieces, initial_state=[
-#         {65: [(0, 0), (1, 0), (0, 1)]},
-#         {64: [(4, 0), (4, 1), (4, 2), (4, 3), (3, 3)]},])
-
-# for solution in covers_bool(incidence_matrix):
-
-#     plt.imshow(get_solution_board(solution, incidence_matrix), cmap='Spectral',
-#                interpolation='nearest')
-#     plt.colorbar()
-#     plt.show()

@@ -49,7 +49,8 @@ class SolverTest(unittest.TestCase):
 
         initial_state = [
             {"65": [[0, 0], [1, 0], [0, 1]]},
-            {"64": [[4, 0], [4, 1], [4, 2], [4, 3], [3, 3]]}]
+            {"64": [[4, 0], [4, 1], [4, 2], [4, 3], [3, 3]]}
+]
         pass
 
         # def test_exact_cover_finds_all_the_positions(self):
