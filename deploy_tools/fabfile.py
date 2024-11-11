@@ -16,9 +16,10 @@ def deploy():
 
     setting_path = "/home/erfan/Desktop/parsian/portal/portal/settings.py"
 
-    _run_tests()
     _create_directory_structure_if_necessary(site_folder)
     _get_latest_source(source_folder)
+    _run_tests(source_folder)
+
     _update_settings(source_folder, env.host)
     _update_virtualenv(source_folder)
     _update_static_files(source_folder)
@@ -34,8 +35,13 @@ def _init_env():
     env.user = 'ubuntu'
 
 
-def _run_tests():
-    run(f'./manage.py test')
+def _run_tests(source_folder):
+
+    #run("kill $(lsof -t -i:8080)")
+    run(
+        f'cd {source_folder}'
+        f' && PYTHONPATH=./solver ../venv/bin/python -m unittest solver/test_solver.py'
+    )
 
 
 def _create_directory_structure_if_necessary(site_folder):
