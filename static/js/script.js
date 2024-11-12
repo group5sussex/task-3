@@ -296,7 +296,9 @@ function resetBoard() {
 
     document.getElementsByClassName("solution-changer")[0].style.transform = "scaleX(0)";
 
-    current_solution = 1;
+    current_solution = 0;
+
+    first_load = false
 
     close_connection();
 
