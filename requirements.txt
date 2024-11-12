@@ -6,6 +6,7 @@ contourpy==1.1.1
 cryptography==43.0.3
 cycler==0.12.1
 Django==4.2.16
+django-cors-headers==4.4.0
 Fabric3==1.14.post1
 fonttools==4.54.1
 importlib_metadata==8.5.0
