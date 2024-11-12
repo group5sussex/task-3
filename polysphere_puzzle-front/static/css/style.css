@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+
+}
+
+.pieces-holder{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+.piece{
+  margin: 5px;
+  cursor: grab;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(11, 40px); /* Доска 11 колонок */
+  grid-template-rows: repeat(5, 40px); /* Доска 5 рядов */
+  gap: 2px;
+  background-color: #333;
+  padding: 10px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.controls button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background-color: #555;
+}
+
+.controls button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.solution-changer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  transform: scaleX(0);
+  overflow: hidden;
+}
+
+.solution-changer button {
+  padding: 10px 10px;
+  margin: 0 10px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+#prev-img {
+  rotate: 180deg;
+}
