@@ -89,7 +89,7 @@ function close_connection(){
 }
 
 function startSSE(data, onMessage, onError) {
-    const eventSource = new EventSource(`http://127.0.0.1:8080/kanoodle/submit/?positions=${encodeURIComponent(data)}`);
+    const eventSource = new EventSource(`/kanoodle/submit/?positions=${encodeURIComponent(data)}`);
 
     eventSource.onmessage = onMessage;
 
