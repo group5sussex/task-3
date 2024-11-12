@@ -5,5 +5,5 @@ from . import views
 
 urlpatterns = [
     path("index", views.index, name="index"),
-    path("submit", csrf_exempt(views.submit), name="submit"),
+    path("submit/", views.submit, name="submit"),
 ]

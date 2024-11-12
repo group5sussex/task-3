@@ -34,7 +34,10 @@ def index(request):
 
 
 def submit(request):
-    data = json.loads(request.body.decode('utf-8'))
+    # data = json.loads(request.body.decode('utf-8'))
+    data = request.GET.get('positions', '{}')
+    data = json.loads(data)
+    print(data)
     initial_state = data.get('initial_state', [])
 
     for state in data['initial_state']:
@@ -54,10 +57,13 @@ def submit(request):
                 break
 
             result = get_solution_board(solution, incidence_matrix)
-            yield f"data: {json.dumps(result.tolist())}\n\n"
+            print(result, "result")
+
+            yield f"data: {result.tolist()}\n\n"
 
     response = StreamingHttpResponse(
         stream_content(), content_type="text/event-stream")
+    response['Cache-Control'] = 'no-cache'
     response['Content-Disposition'] = 'inline; filename="stream.txt"'
     return response
 
