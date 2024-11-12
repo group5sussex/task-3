@@ -21,7 +21,7 @@ from django.urls import path
 
 urlpatterns = [
     path("kanoodle/", include("solver.urls")),
-    path('', include('polysphere_puzzle-front.urls')),
+    path('front/', include('polysphere_puzzle-front.urls')),
     path("admin/", admin.site.urls),
 
 ]

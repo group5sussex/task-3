@@ -19,7 +19,6 @@ from django.urls import path
 from . import views, sse
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('events/', sse.sse_view, name='sse_view')
 ]
